@@ -14,18 +14,23 @@
 """
 Note that we don't combine the main with ray_trainer as ray_trainer is used by other main.
 """
+# Main Script to run to start the process
+
 import ray
 import hydra
 from pathlib import Path
 from pprint import pprint
 
 from omegaconf import OmegaConf
-from verl.utils.fs import copy_local_path_from_hdfs
-from verl.utils import hf_tokenizer
-from verl.trainer.ppo.ray_trainer import ResourcePoolManager, Role
+from verl.verl.utils.fs import copy_local_path_from_hdfs
+from verl.verl.utils import hf_tokenizer
+from verl.verl.trainer.ppo.ray_trainer import ResourcePoolManager, Role
 
+#from absolute_zero_reasoner.trainer.ppo.azr_ray_trainer import CodeIORayPPOTrainer
+#from absolute_zero_reasoner.rewards.reward_managers import CodeIORewardManager
 from absolute_zero_reasoner.trainer.ppo.azr_ray_trainer import CodeIORayPPOTrainer
 from absolute_zero_reasoner.rewards.reward_managers import CodeIORewardManager
+
 
 
 @hydra.main(config_path='configs', config_name='azr_ppo_trainer', version_base=None)
@@ -76,14 +81,14 @@ def main_task(config, compute_score=None):
     # define worker classes
     if config.actor_rollout_ref.actor.strategy == 'fsdp':
         assert config.actor_rollout_ref.actor.strategy == config.critic.strategy
-        from verl.workers.fsdp_workers import ActorRolloutRefWorker, CriticWorker
-        from verl.single_controller.ray import RayWorkerGroup
+        from verl.verl.workers.fsdp_workers import ActorRolloutRefWorker, CriticWorker
+        from verl.verl.single_controller.ray import RayWorkerGroup
         ray_worker_group_cls = RayWorkerGroup
 
     elif config.actor_rollout_ref.actor.strategy == 'megatron':
         assert config.actor_rollout_ref.actor.strategy == config.critic.strategy
-        from verl.workers.megatron_workers import ActorRolloutRefWorker, CriticWorker
-        from verl.single_controller.ray.megatron import NVMegatronRayWorkerGroup
+        from verl.verl.workers.megatron_workers import ActorRolloutRefWorker, CriticWorker
+        from verl.verl.single_controller.ray.megatron import NVMegatronRayWorkerGroup
         ray_worker_group_cls = NVMegatronRayWorkerGroup
 
     else:
@@ -115,9 +120,9 @@ def main_task(config, compute_score=None):
     # - The reward type depends on the tag of the data
     if config.reward_model.enable:
         if config.reward_model.strategy == 'fsdp':
-            from verl.workers.fsdp_workers import RewardModelWorker
+            from verl.verl.workers.fsdp_workers import RewardModelWorker
         elif config.reward_model.strategy == 'megatron':
-            from verl.workers.megatron_workers import RewardModelWorker
+            from verl.verl.workers.megatron_workers import RewardModelWorker
         else:
             raise NotImplementedError
         role_worker_mapping[Role.RewardModel] = ray.remote(RewardModelWorker)
