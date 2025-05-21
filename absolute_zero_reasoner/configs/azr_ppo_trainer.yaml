@@ -15,7 +15,7 @@ data:
 actor_rollout_ref:
   hybrid_engine: True
   model:
-    path: deepseek-ai/deepseek-llm-7b-chat
+    path: allenai/OLMo-2-0425-1B
     pretrained_tokenizer: True
     external_lib: null
     override_config: { }
@@ -100,7 +100,7 @@ critic:
     warmup_style: constant  # select from constant/cosine
     total_training_steps: -1  # must be override by program
   model:
-    path: deepseek-ai/deepseek-llm-7b-chat
+    path: allenai/OLMo-2-0425-1B
     tokenizer_path: ${actor_rollout_ref.model.path}
     override_config: { }
     external_lib: ${actor_rollout_ref.model.external_lib}
