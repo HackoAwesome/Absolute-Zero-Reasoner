@@ -1,7 +1,7 @@
 data:
   tokenizer: null
-  train_files: data/math/train_${reward_fn.extraction_type}.parquet
-  val_files: data/math/test_${reward_fn.extraction_type}.parquet
+  train_files: verl/tests/e2e/arithmetic_sequence/data/test.parquet #data/math/train_${reward_fn.extraction_type}.parquet
+  val_files: verl/tests/e2e/arithmetic_sequence/data/train.parquet #data/math/test_${reward_fn.extraction_type}.parquet
   prompt_key: prompt
   max_prompt_length: 8096
   max_response_length: 8096
