@@ -597,6 +597,7 @@ class ReasonRLRayPPOTrainer(RayPPOTrainer):
                                        return_raw_chat=self.config.data.get('return_raw_chat', False),
                                        truncation='error',
                                        extra_source_key="val")
+        assert len(self.val_dataset) > 0 #check if it is empty
         self.val_dataloader = DataLoader(dataset=self.val_dataset,
                                          batch_size=len(self.val_dataset),
                                          shuffle=True,
