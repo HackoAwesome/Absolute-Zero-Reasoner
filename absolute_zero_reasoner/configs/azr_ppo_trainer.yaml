@@ -1,7 +1,7 @@
 data:
   tokenizer: null
-  train_files: absolute_zero_reasoner/trainer/gsm8k/train.parquet #data/math/train_${reward_fn.extraction_type}.parquet
-  val_files: absolute_zero_reasoner/trainer/gsm8k/test.parquet #data/math/test_${reward_fn.extraction_type}.parquet
+  train_files: verl/tests/e2e/arithmetic_sequence/data/train.parquet #data/math/train_${reward_fn.extraction_type}.parquet
+  val_files: verl/tests/e2e/arithmetic_sequence/data/test.parquet #data/math/test_${reward_fn.extraction_type}.parquet
   prompt_key: prompt
   max_prompt_length: 8096
   max_response_length: 8096
@@ -89,7 +89,7 @@ actor_rollout_ref:
     # for hf rollout
     do_sample: True
     # number of responses (i.e. num sample times)
-    n: 1 # > 1 for grpo
+    n: 1 # > 1 for grpo (only support n = 1 now)
 
 critic:
   strategy: fsdp
