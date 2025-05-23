@@ -3,8 +3,8 @@ data:
   train_files: verl/tests/e2e/arithmetic_sequence/data/train.parquet #data/math/train_${reward_fn.extraction_type}.parquet
   val_files: verl/tests/e2e/arithmetic_sequence/data/test.parquet #data/math/test_${reward_fn.extraction_type}.parquet
   prompt_key: prompt
-  max_prompt_length: 8096
-  max_response_length: 8096
+  max_prompt_length: 1024
+  max_response_length: 1024
   max_validation_prompt_length: 8096
   train_batch_size: 1024
   val_batch_size: 1312
