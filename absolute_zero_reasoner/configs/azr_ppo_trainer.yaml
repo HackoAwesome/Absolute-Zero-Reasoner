@@ -1,7 +1,7 @@
 data:
   tokenizer: null
-  train_files: verl/tests/e2e/arithmetic_sequence/data/test.parquet #data/math/train_${reward_fn.extraction_type}.parquet
-  val_files: verl/tests/e2e/arithmetic_sequence/data/train.parquet #data/math/test_${reward_fn.extraction_type}.parquet
+  train_files: absolute_zero_reasoner/trainer/gsm8k/train.parquet #data/math/train_${reward_fn.extraction_type}.parquet
+  val_files: absolute_zero_reasoner/trainer/gsm8k/test.parquet #data/math/test_${reward_fn.extraction_type}.parquet
   prompt_key: prompt
   max_prompt_length: 8096
   max_response_length: 8096
@@ -161,7 +161,7 @@ trainer:
   debug_port: 5678
   wandb_run_id: null
   total_epochs: 30
-  total_training_steps: null
+  total_training_steps: 10 #Change later
   project_name: verl_examples
   experiment_name: gsm8k
   logger: [ 'console', 'wandb' ]
