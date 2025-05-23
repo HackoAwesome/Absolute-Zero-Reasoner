@@ -585,7 +585,7 @@ class ReasonRLRayPPOTrainer(RayPPOTrainer):
 
         self.train_dataloader = DataLoader(dataset=self.train_dataset,
                                            batch_size=self.config.data.train_batch_size,
-                                           drop_last=True,
+                                           drop_last=False,
                                            collate_fn=collate_fn,
                                            sampler=sampler)
 
@@ -597,11 +597,10 @@ class ReasonRLRayPPOTrainer(RayPPOTrainer):
                                        return_raw_chat=self.config.data.get('return_raw_chat', False),
                                        truncation='error',
                                        extra_source_key="val")
-        assert len(self.val_dataset) > 0 #check if it is empty
         self.val_dataloader = DataLoader(dataset=self.val_dataset,
                                          batch_size=len(self.val_dataset),
                                          shuffle=True,
-                                         drop_last=True,
+                                         drop_last=False,
                                          collate_fn=collate_fn)
 
         assert len(self.train_dataloader) >= 1
