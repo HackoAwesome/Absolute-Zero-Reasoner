@@ -585,7 +585,7 @@ class ReasonRLRayPPOTrainer(RayPPOTrainer):
 
         self.train_dataloader = DataLoader(dataset=self.train_dataset,
                                            batch_size=self.config.data.train_batch_size,
-                                           drop_last=False,
+                                           drop_last=True,
                                            collate_fn=collate_fn,
                                            sampler=sampler)
 
@@ -600,7 +600,7 @@ class ReasonRLRayPPOTrainer(RayPPOTrainer):
         self.val_dataloader = DataLoader(dataset=self.val_dataset,
                                          batch_size=len(self.val_dataset),
                                          shuffle=True,
-                                         drop_last=False,
+                                         drop_last=True,
                                          collate_fn=collate_fn)
 
         assert len(self.train_dataloader) >= 1
