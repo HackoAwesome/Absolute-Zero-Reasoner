@@ -1,13 +1,13 @@
 data:
   tokenizer: null
-  train_files: data/math/train_${reward_fn.extraction_type}.parquet
-  val_files: data/math/test_${reward_fn.extraction_type}.parquet
-  prompt_key: prompt
-  max_prompt_length: 8096
-  max_response_length: 8096
-  max_validation_prompt_length: 8096
-  train_batch_size: 1024
-  val_batch_size: 1312
+  train_files: absolute_zero_reasoner/gsm8k/train.parquet #data/math/train_${reward_fn.extraction_type}.parquet
+  val_files: absolute_zero_reasoner/gsm8k/test.parquet #data/math/test_${reward_fn.extraction_type}.parquet
+  prompt_key: question #prompt
+  max_prompt_length: 1024
+  max_response_length: 1024
+  max_validation_prompt_length: 2048
+  train_batch_size: 16 #1024
+  val_batch_size: 16 #1312
   return_raw_input_ids: False  # This should be set to true when the tokenizer between policy and rm differs
   return_raw_chat: False
   shuffle: True
@@ -15,7 +15,7 @@ data:
 actor_rollout_ref:
   hybrid_engine: True
   model:
-    path: ~/models/deepseek-llm-7b-chat
+    path: allenai/OLMo-2-0425-1B
     pretrained_tokenizer: True
     external_lib: null
     override_config: { }
@@ -24,8 +24,8 @@ actor_rollout_ref:
   actor:
     strategy: fsdp  # This is for backward-compatibility
     ppo_mini_batch_size: 256
-    ppo_micro_batch_size: null # will be deprecated, use ppo_micro_batch_size_per_gpu
-    ppo_micro_batch_size_per_gpu: null
+    ppo_micro_batch_size: null # will be deprecated, use ppo_micro_batch_size_per_gpu #Must be a factor of mini_batch_size (Adjust next time)
+    ppo_micro_batch_size_per_gpu: null #Cannot set both batch size and batch size per gpu
     use_dynamic_bsz: False
     ppo_max_token_len_per_gpu: 16384 # n * ${data.max_prompt_length} + ${data.max_response_length}
     grad_clip: 1.0
@@ -58,7 +58,7 @@ actor_rollout_ref:
       wrap_policy:
         # transformer_layer_cls_to_wrap: None
         min_num_params: 0
-    log_prob_micro_batch_size: null # will be deprecated, use log_prob_micro_batch_size_per_gpu
+    log_prob_micro_batch_size: null # will be deprecated, use log_prob_micro_batch_size_per_gpu #Adjust This next Time
     log_prob_micro_batch_size_per_gpu: null
     log_prob_use_dynamic_bsz: ${actor_rollout_ref.actor.use_dynamic_bsz}
     log_prob_max_token_len_per_gpu: ${actor_rollout_ref.actor.ppo_max_token_len_per_gpu}
@@ -71,16 +71,16 @@ actor_rollout_ref:
     prompt_length: ${data.max_prompt_length}  # not use for opensource
     response_length: ${data.max_response_length}
     # for vllm rollout
-    dtype: bfloat16 # should align with FSDP
+    dtype: float16 # should align with FSDP (original was Bfloat16)
     gpu_memory_utilization: 0.5
     ignore_eos: False
     enforce_eager: True
     free_cache_engine: True
     load_format: dummy_dtensor
-    tensor_model_parallel_size: 2
+    tensor_model_parallel_size: 1 #2
     max_num_batched_tokens: 8192
     max_num_seqs: 1024
-    log_prob_micro_batch_size: null # will be deprecated, use log_prob_micro_batch_size_per_gpu
+    log_prob_micro_batch_size: 64 # will be deprecated, use log_prob_micro_batch_size_per_gpu #Adjust This next Time
     log_prob_micro_batch_size_per_gpu: null
     log_prob_use_dynamic_bsz: ${actor_rollout_ref.actor.use_dynamic_bsz}
     log_prob_max_token_len_per_gpu: ${actor_rollout_ref.actor.ppo_max_token_len_per_gpu}
@@ -89,7 +89,7 @@ actor_rollout_ref:
     # for hf rollout
     do_sample: True
     # number of responses (i.e. num sample times)
-    n: 1 # > 1 for grpo
+    n: 1 # > 1 for grpo (only support n = 1 now)
 
 critic:
   strategy: fsdp
@@ -100,7 +100,7 @@ critic:
     warmup_style: constant  # select from constant/cosine
     total_training_steps: -1  # must be override by program
   model:
-    path: ~/models/deepseek-llm-7b-chat
+    path: allenai/OLMo-2-0425-1B
     tokenizer_path: ${actor_rollout_ref.model.path}
     override_config: { }
     external_lib: ${actor_rollout_ref.model.external_lib}
@@ -115,7 +115,7 @@ critic:
         min_num_params: 0
       fsdp_size: -1
   ppo_mini_batch_size: ${actor_rollout_ref.actor.ppo_mini_batch_size}
-  ppo_micro_batch_size: null # will be deprecated, use ppo_micro_batch_size_per_gpu
+  ppo_micro_batch_size: 64 # will be deprecated, use ppo_micro_batch_size_per_gpu #Adjust This next Time
   ppo_micro_batch_size_per_gpu: null
   forward_micro_batch_size: ${critic.ppo_micro_batch_size}
   forward_micro_batch_size_per_gpu: ${critic.ppo_micro_batch_size_per_gpu}
@@ -133,14 +133,14 @@ reward_model:
   strategy: fsdp
   model:
     input_tokenizer: ${actor_rollout_ref.model.path}  # set this to null if the chat template is identical
-    path: ~/models/FsfairX-LLaMA3-RM-v0.1
+    path: sfairXC/FsfairX-LLaMA3-RM-v0.1
     external_lib: ${actor_rollout_ref.model.external_lib}
     use_remove_padding: False
     fsdp_config:
       min_num_params: 0
       param_offload: False
       fsdp_size: -1
-  micro_batch_size: null # will be deprecated, use micro_batch_size_per_gpu
+  micro_batch_size: 64 # will be deprecated, use micro_batch_size_per_gpu #Adjust This next Time
   micro_batch_size_per_gpu: null # set a number
   max_length: null
   ulysses_sequence_parallel_size: 1 # sp size
@@ -161,13 +161,13 @@ trainer:
   debug_port: 5678
   wandb_run_id: null
   total_epochs: 30
-  total_training_steps: null
+  total_training_steps: 10 #Change later
   project_name: verl_examples
   experiment_name: gsm8k
   logger: [ 'console', 'wandb' ]
   val_generations_to_log_to_wandb: 0
   nnodes: 1
-  n_gpus_per_node: 8
+  n_gpus_per_node: 1 #8 was the original number
   save_freq: -1
   # auto: find the last ckpt to resume. If can't find, start from scratch
   resume_mode: auto # or auto or resume_path if 
