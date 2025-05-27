@@ -17,9 +17,9 @@ python -m absolute_zero_reasoner.main_azr_ppo \
     data.val_files=data/code_reason/test_answer.parquet \
     data.train_batch_size=16 \
     data.val_batch_size=1312 \
-    data.max_prompt_length=2048 \
+    data.max_prompt_length=1024 \
     data.max_validation_prompt_length=2048 \
-    data.max_response_length=8096 \
+    data.max_response_length=1024 \
     actor_rollout_ref.model.path=allenai/OLMo-2-0425-1B \
     actor_rollout_ref.actor.optim.lr=1e-6 \
     actor_rollout_ref.model.use_remove_padding=False \
