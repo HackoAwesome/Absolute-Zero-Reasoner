@@ -50,7 +50,7 @@ python -m absolute_zero_reasoner.main_azr_ppo \
     trainer.logger=['console','wandb'] \
     trainer.project_name='azr' \
     trainer.experiment_name='azr_coder3b' \
-    trainer.n_gpus_per_node=2 \
+    trainer.n_gpus_per_node=1 \
     trainer.nnodes=1 \
     trainer.save_freq=10 \
     trainer.remove_previous_ckpt_in_save=True \
