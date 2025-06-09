@@ -20,7 +20,7 @@ python -m absolute_zero_reasoner.main_azr_ppo \
     data.max_prompt_length=256 \
     data.max_validation_prompt_length=256 \
     data.max_response_length=256 \
-    actor_rollout_ref.model.path=allenai/OLMo-2-0425-1B \
+    actor_rollout_ref.model.path=Qwen/Qwen2-0.5B \
     actor_rollout_ref.actor.optim.lr=1e-6 \
     actor_rollout_ref.model.use_remove_padding=False \
     actor_rollout_ref.actor.ppo_mini_batch_size=0 \
