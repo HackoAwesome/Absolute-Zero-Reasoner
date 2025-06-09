@@ -70,7 +70,7 @@ python -m absolute_zero_reasoner.main_azr_ppo \
     azr.pretrain_pred_steps=-1 \
     azr.executor=qwq \
     azr.ast_check=True \
-    azr.reward.n_samples= 8 \
+    azr.reward.n_samples=8 \
     azr.problem_types=['code_i','code_o','code_f'] \
     azr.data_selection_strategy.banned_keywords_for_errors_and_exceptions=['raise'] \
     trainer.debug=False \
