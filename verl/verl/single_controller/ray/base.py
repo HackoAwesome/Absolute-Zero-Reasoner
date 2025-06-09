@@ -25,6 +25,14 @@ from verl.single_controller.base import WorkerGroup, ResourcePool, ClassWithInit
 
 __all__ = ['Worker']
 
+import psutil
+import torch
+
+def check_memory():
+    print(f"CPU RAM Used: {(psutil.virtual_memory().used / 1e9):.2f} GB")
+    if torch.cuda.is_available():
+        print(f"GPU RAM Used: {torch.cuda.memory_allocated() / 1e9:.2f} GB")
+
 
 def get_random_string(length: int) -> str:
     import random
@@ -39,6 +47,7 @@ def func_generator(self, method_name, dispatch_fn, collect_fn, execute_fn, block
         args, kwargs = dispatch_fn(self, *args, **kwargs)
         output = execute_fn(method_name, *args, **kwargs)
         if blocking:
+            check_memory()
             output = ray.get(output)
         output = collect_fn(self, output)
         return output

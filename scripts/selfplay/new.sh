@@ -39,7 +39,7 @@ python -m absolute_zero_reasoner.main_azr_ppo \
     actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
     actor_rollout_ref.rollout.name=vllm \
     actor_rollout_ref.rollout.max_num_batched_tokens=256 \
-    actor_rollout_ref.rollout.gpu_memory_utilization=0.3 \
+    actor_rollout_ref.rollout.gpu_memory_utilization=0.5 \
     actor_rollout_ref.rollout.enforce_eager=True \
     actor_rollout_ref.rollout.free_cache_engine=False \
     actor_rollout_ref.rollout.n=1 \
@@ -70,7 +70,7 @@ python -m absolute_zero_reasoner.main_azr_ppo \
     azr.pretrain_pred_steps=-1 \
     azr.executor=qwq \
     azr.ast_check=True \
-    azr.reward.n_samples=8 \
+    azr.reward.n_samples=2!free -h \
     azr.problem_types=['code_i','code_o','code_f'] \
     azr.data_selection_strategy.banned_keywords_for_errors_and_exceptions=['raise'] \
     trainer.debug=False \
