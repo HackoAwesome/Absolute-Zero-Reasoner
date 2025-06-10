@@ -13,8 +13,8 @@ python -m absolute_zero_reasoner.main_azr_ppo \
     data.shuffle=True \
     actor_rollout_ref.ref.include_ref=False \
     algorithm.adv_estimator=reinforce_plus_plus \
-    data.train_files=data/code_reason/test_answer2.parquet \
-    data.val_files=data/code_reason/test_answer2.parquet \
+    data.train_files=data/code_reason/test_answer.parquet \
+    data.val_files=data/code_reason/test_answer.parquet \
     data.train_batch_size=1 \
     data.val_batch_size=1 \
     data.max_prompt_length=256 \
