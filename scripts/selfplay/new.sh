@@ -17,9 +17,9 @@ python -m absolute_zero_reasoner.main_azr_ppo \
     data.val_files=data/code_reason/test_answer.parquet \
     data.train_batch_size=1 \
     data.val_batch_size=1 \
-    data.max_prompt_length=256 \
-    data.max_validation_prompt_length=256 \
-    data.max_response_length=256 \
+    data.max_prompt_length=128 \
+    data.max_validation_prompt_length=128 \
+    data.max_response_length=128 \
     actor_rollout_ref.model.path=Qwen/Qwen2-0.5B \
     actor_rollout_ref.actor.optim.lr=1e-6 \
     actor_rollout_ref.model.use_remove_padding=False \
